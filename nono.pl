@@ -76,6 +76,28 @@ shwoNspaces(N):-
     N1 is N - 1,
     shwoNspaces(N1).
 
+showNonogram([], _, _, _, _).
+showNonogram([X|L], Fil, Col, IncF, IncC):-
+    gotoXY(Fil, Col),
+    showRow(X, IncF),
+    Col1 is Col + IncC,
+    showNonogram(L, Fil, Col1, IncF, IncC).
+
+getRandomColor([X], X).
+getRandomColor([_|L], C):-
+    random(N),
+    N1 is round(N) * 100,
+    N1 < 50,
+    getRandomColor(L, C).
+getRandomColor([X|_], X).
+
+generateRandomRow(_, 0, []).
+generateRandomRow(Cs, Col, L):-
+    getRandomColor(Cs, C),
+    append([C], L1, L),
+    Col1 is Col - 1,
+    generateRandomRow(Cs, Col1, L1).
+
 % Función para escribir por pantalla las filas de un nonograma
 % Parametros:
 %   - Lista de filas del nonograma (lista de listas)
@@ -89,15 +111,23 @@ escriuNonograma(Nono):-
 %   - Número de columnas del nonograma
 %   - Separación entre filas
 %   - Separación entre columnas
-mostraNonograma([], _, _, _, _).
 mostraNonograma([X|L], Fil, Col, IncF, IncC):-
-    gotoXY(Fil, Col),
-    showRow(X, IncF),
-    Col1 is Col + IncC,
-    mostraNonograma(L, Fil, Col1, IncF, IncC).
+    cls,
+    showNonogram([X|L], Fil, Col, IncF, IncC).
 
+% Función para construir un nonograma aleatorio a partir de una lista de colores, 
+% un número de filas y un número de columnas.
+% Parametros:
+%   - Lista de colores validos
+%   - Número de filas del nonograma
+%   - Número de columnas del nonograma
+%   - Nonograma generado
+ferNonograma(_, 0, _, []).
 ferNonograma(Colors, Fil, Col, Nono):-
-    write("TODO").
+    generateRandomRow(Colors, Col, Row),
+    append([Row], Nono1, Nono),
+    Fil1 is Fil - 1,
+    ferNonograma(Colors, Fil1, Col, Nono1).
 
 % Función para extrar las pistas dado un nonograma
 % Parametros:
