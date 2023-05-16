@@ -18,26 +18,36 @@ showList([X|L]):-
     nl,
     showList(L).
 
-treuPistas([],[]).
-treuPistas([X|L1], [Y|L2]):-
+transposeMatrix([], []).
+transposeMatrix([[]|L], []):- transposeMatrix(L, []).
+transposeMatrix(M, [C|T]):-
+    transposeColumn(M, C, M1),
+    transposeMatrix(M1, T).
+
+transposeColumn([], [], []).
+transposeColumn([[X|L1]|M], [X|C], [L1|M1]):-
+    transposeColumn(M, C, M1).
+
+treuPistes([],[]).
+treuPistes([X|L1], [Y|L2]):-
     extreuPista(X,Y),
-    treuPistas(L1,L2).
+    treuPistes(L1,L2).
 
 extreuPista([], []).
 % Caso [seguits, color, 1]
-extreuPista([X|L1], [seguits, X, 1], L2):-
+extreuPista([X|L1], [[seguits, X, 1]|L2]):-
     vegades(X, [X|L1], 1),
     !,
     extreuPista(L1, L2).
 % Caso [seguits, color, N]
-extreuPista([X|L1], [seguits, X, N], L2):-
+extreuPista([X|L1], [[seguits, X, N]|L2]):-
     vegades(X, [X|L1], N),
     seguits(N, X, [X|L1]),
     !,
     borrar(X, [X|L1], L3), % Borrar los seguidos
     extreuPista(L3, L2).
 % Caso [no_seguits, color, N]
-extreuPista([X|L1], [separats, X, N], L2):-
+extreuPista([X|L1], [[no_seguits, X, N]|L2]):-
     vegades(X, [X|L1], N),
     !,
     borrar(X, [X|L1], L3), % Borrar los seguidos
@@ -47,20 +57,20 @@ vegades(_, [], 0).
 vegades(X, [X|L], N):-
     vegades(X, L, N1),
     N is N1 + 1.
-vegades(X, [Y|L], N):-
-    X \= Y,
+vegades(X, [_|L], N):-
     vegades(X, L, N).
-
-seguits(0, _, _).
-seguits(N, X, [X|L]):-
-    N1 is N - 1,
-    seguits(N1, X, L).
+     
+seguits(0, _, []).
+seguits(N, X, [X|L]) :-
+    seguits(N1, X, L),
+    N is N1 + 1.
+seguits(N, X, [Y|L]) :-
+    X \= Y,
+    seguits(N, X, L).
 
 borrar(_, [], []).
-borrar(X, [X|L1], L2):-
-    borrar(X, L1, L2).
+borrar(X, [X|L1], L2).
 borrar(X, [Y|L1], [Y|L2]):-
-    X \= Y,
     borrar(X, L1, L2).
 
 showRow([],_).
@@ -97,6 +107,18 @@ generateRandomRow(Cs, Col, L):-
     append([C], L1, L),
     Col1 is Col - 1,
     generateRandomRow(Cs, Col1, L1).
+
+showHHints(L, F, C, IncF, IncC):-
+    gotoXY(F, C),
+    % TODO,
+    F1 is F + IncF,
+    showHHints(L, F1, C, IncF, IncC).
+
+showVHints(L, F, C, IncF, IncC):-
+    gotoXY(F, C),
+    % TODO,
+    C1 is C + IncC,
+    showVHints(L, F, C1, IncF, IncC).
 
 % Función para escribir por pantalla las filas de un nonograma
 % Parametros:
@@ -135,15 +157,39 @@ ferNonograma(Colors, Fil, Col, Nono):-
 %   - Descripción de las pistas
 descriuNonograma(Nono, Desc):-
     % Hacer pista para las filas
+    treuPistes(Nono, DescF),
     % Transponer el nonograma
+    transposeMatrix(Nono, NonoT),
     % Hacer pista para las columnas
-    write("TODO").
+    treuPistes(NonoT, DescC),
+    % Concatenar las pistas de las filas y las columnas
+    append(DescF, DescC, Desc).
 
+% Función para pintar las pistas dada una descripción de hortizontales
+% Parametros:
+%   - Descripción de las pistas
+%   - Fila inicial para pintar las pistas
+%   - Columna inicial para pintar las pistas
+%   - Incremento de fila para pintar las pistas
+%   - Incremento de columna para pintar las pistas
 mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
-    write("TODO").
+    cls,
+    showHHints(DescHo, F, C, FInc, CInc).
 
+% Función para pintar las pistas dada una descripción de verticales 
+% Parametros:
+%   - Descripción de las pistas
+%   - Fila inicial para pintar las pistas
+%   - Columna inicial para pintar las pistas
+%   - Incremento de fila para pintar las pistas
+%   - Incremento de columna para pintar las pistas
 mostraPistesVerticals(DescVer, F, C, FInc, CInc):-
-    write("TODO").
+    cls,
+    showVHints(DescVer, F, C, FInc, CInc).
 
+% Función para resolver un nonograma dado su descripción
+% Parametros:
+%   - Descripción del nonograma
+%   - Solución del nonograma
 resolNonograma(Desc, Sol):-
     write("TODO").
