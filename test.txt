@@ -1,0 +1,2 @@
+escriuNonograma([[verd,lila,vermell,vermell],[blau,verd,blau,blau],[lila, blau,verd,verd],[verd,blau,vermell, verd]]).
+mostraNonograma([[verd,lila,vermell,vermell],[blau,verd,blau,blau],[lila, blau,verd,verd],[verd,blau,vermell, verd]], 3, 5, 1, 3).
