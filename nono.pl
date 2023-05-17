@@ -12,18 +12,31 @@ color(lila):-write("\e[1;95m").
 color(cel):-write("\e[1;96m").
 color(blanc):-write("\e[1;97m").
 
+
+% Función para mostrar una lista de listas
+% Parametros:
+%   - Lista de listas
 showList([]).
 showList([X|L]):-
     write(X),
     nl,
     showList(L).
 
+% Función para realizar la transpuesta de una matriz
+% Parametros:
+%   - Matriz a transponer
+%   - Matriz transpuesta
 transposeMatrix([], []).
 transposeMatrix([[]|L], []):- transposeMatrix(L, []).
 transposeMatrix(M, [C|T]):-
     transposeColumn(M, C, M1),
     transposeMatrix(M1, T).
 
+% Función para realizar la transpuesta de una columna
+% Parametros:
+%   - Matriz a transponer
+%   - Columna transpuesta
+%   - Matriz transpuesta
 transposeColumn([], [], []).
 transposeColumn([[X|L1]|M], [X|C], [L1|M1]):-
     transposeColumn(M, C, M1).
@@ -73,6 +86,10 @@ borrar(X, [X|L1], L2).
 borrar(X, [Y|L1], [Y|L2]):-
     borrar(X, L1, L2).
 
+% Función para mostrar una fila.
+% Parametros:
+%   - Fila a mostrar
+%   - Incremento de espacios entre pistas
 showRow([],_).
 showRow([X|L], Inc):-
     color(X),
@@ -80,12 +97,22 @@ showRow([X|L], Inc):-
     showNspaces(Inc),
     showRow(L, Inc).
 
+% Función para mostrar graficamente N espacios
+% Parametros:
+%   - Numero de espacios
 showNspaces(0).
 showNspaces(N):-
     write(" "),
     N1 is N - 1,
     showNspaces(N1).
 
+% Función para mostrar un nonograma dado una descripción del nonograma
+% Parametros:
+%   - Descripción del nonograma
+%   - Fila donde se empieza a mostrar
+%   - Columna donde se empieza a mostrar
+%   - Incremento de espacios entre pistas
+%   - Incremento de lineas entre pistas y el nonograma
 showNonogram([], _, _, _, _).
 showNonogram([X|L], Fil, Col, IncF, IncC):-
     gotoXY(Fil, Col),
@@ -93,6 +120,10 @@ showNonogram([X|L], Fil, Col, IncF, IncC):-
     Col1 is Col + IncC,
     showNonogram(L, Fil, Col1, IncF, IncC).
 
+% Función para obtener un color aleatorio de una lista de colores
+% Parametros:
+%   - Lista de colores
+%   - Color aleatorio
 getRandomColor([X], X).
 getRandomColor([_|L], C):-
     random(N),
@@ -101,6 +132,11 @@ getRandomColor([_|L], C):-
     getRandomColor(L, C).
 getRandomColor([X|_], X).
 
+% Función para generar una fila aleatoria dado una lista de colores
+% Parametros:
+%   - Lista de colores
+%   - Numero de columnas
+%   - Fila generada
 generateRandomRow(_, 0, []).
 generateRandomRow(Cs, Col, L):-
     getRandomColor(Cs, C),
@@ -108,6 +144,14 @@ generateRandomRow(Cs, Col, L):-
     Col1 is Col - 1,
     generateRandomRow(Cs, Col1, L1).
 
+% Función para mostrar una horizantal o verticalmente las pistas
+% dado una descripción del nonograma (horizontal o vertical).
+% Parametros:
+%   - Descripción del nonograma (horizontal o vertical)
+%   - Fila donde se empieza a mostrar
+%   - Columna donde se empieza a mostrar
+%   - Incremento de espacios entre pistas
+%   - Incremento de lineas entre pistas y el nonograma
 showHints([], _, _, _, _).
 showHints([H|L], F, C, IncF, IncC):-
     gotoXY(F, C),
@@ -115,6 +159,12 @@ showHints([H|L], F, C, IncF, IncC):-
     C1 is C + IncC,
     showHints(L, F, C1, IncF, IncC).
 
+% Función para mostrar una linea de pistas graficamente 
+% dada una linea de la descipción del mismo
+% Parametros:
+%   - Linea de la descripción del nonograma
+%   - Incremento de espacios entre pistas
+%   - Incremento de espacios entre pistas y el nonograma
 showLine([], _, _).
 showLine([[H, C, N] | L], IncF, IncC):-
     color(C),

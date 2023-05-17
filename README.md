@@ -9,6 +9,7 @@
   - [ ] Se bugea en la sección de seguidos. no seguidos, ...
 - [x] Tarea 5 - 2.0
 - [ ] Tarea 6 - 2.0
+- [ ] Documentar funciones auxiliares en código.
 
 ## Anotaciones
 
