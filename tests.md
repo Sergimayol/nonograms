@@ -65,9 +65,69 @@ descriuNonograma([[verd,lila,vermell,vermell],[blau,verd,blau,blau],[lila,blau,v
 
 ```prolog
 mostraPistesHorizontals([
+    [
         [[seguits, verd, 1], [seguits, lila, 1], [seguits, vermell, 2]],
         [[no_seguits, blau, 3], [seguits, verd, 1]],
         [[seguits, lila, 1], [seguits, blau, 1], [seguits, verd, 2]],
         [[no_seguits, verd, 2], [seguits, blau, 1], [seguits, vermell, 1]]
-    ], 5,5 ,1, 1).
+    ],
+    [
+        [[no_seguits, verd, 2], [seguits, blau, 1], [seguits, lila, 1]],
+        [[seguits, lila, 1], [seguits, verd, 1], [seguits, blau, 2]],
+        [[no_seguits, vermell, 2], [seguits, blau, 1], [seguits, verd, 1]],
+        [[seguits, vermell, 1], [seguits, blau, 1], [seguits, verd, 2]]
+    ]
+], 5,5 ,1, 1).
+```
+
+```prolog
+mostraPistesVerticals([
+    [
+        [[seguits, verd, 1], [seguits, lila, 1], [seguits, vermell, 2]],
+        [[no_seguits, blau, 3], [seguits, verd, 1]],
+        [[seguits, lila, 1], [seguits, blau, 1], [seguits, verd, 2]],
+        [[no_seguits, verd, 2], [seguits, blau, 1], [seguits, vermell, 1]]
+    ],
+    [
+        [[no_seguits, verd, 2], [seguits, blau, 1], [seguits, lila, 1]],
+        [[seguits, lila, 1], [seguits, verd, 1], [seguits, blau, 2]],
+        [[no_seguits, vermell, 2], [seguits, blau, 1], [seguits, verd, 1]],
+        [[seguits, vermell, 1], [seguits, blau, 1], [seguits, verd, 2]]
+    ]
+], 5,5 ,1, 1).
+```
+
+```prolog
+[
+    [
+        [seguits,verd,1],[seguits,lila,1],[seguits,vermell,2]
+    ],
+    [
+        [no_seguits,blau,3],[seguits,verd,1]
+    ],
+    [
+        [seguits,lila,1],[seguits,blau,1],[seguits,verd,2]
+    ],
+    [
+        [no_seguits,verd,2],[seguits,blau,1],[seguits,vermell,1]
+    ]
+]
+```
+
+```prolog
+[
+    [
+        [no_seguits,blau,3],[seguits,verd,1]
+    ],
+    [
+        [seguits,lila,1],[seguits,blau,1],[seguits,verd,2]
+    ],
+    [
+        [no_seguits,verd,2],[seguits,blau,1],[seguits,vermell,1]
+    ]
+]
+```
+
+```prolog
+showLine()
 ```

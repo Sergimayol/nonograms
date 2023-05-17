@@ -7,5 +7,5 @@
 - [x] Tarea 3 - 1.5
 - [ ] Tarea 4 - 2.5
   - [ ] Se bugea en la sección de seguidos. no seguidos, ...
-- [ ] Tarea 5 - 2.0
+- [x] Tarea 5 - 2.0
 - [ ] Tarea 6 - 2.0

@@ -77,14 +77,14 @@ showRow([],_).
 showRow([X|L], Inc):-
     color(X),
     write("X"),
-    shwoNspaces(Inc),
+    showNspaces(Inc),
     showRow(L, Inc).
 
-shwoNspaces(0).
-shwoNspaces(N):-
+showNspaces(0).
+showNspaces(N):-
     write(" "),
     N1 is N - 1,
-    shwoNspaces(N1).
+    showNspaces(N1).
 
 showNonogram([], _, _, _, _).
 showNonogram([X|L], Fil, Col, IncF, IncC):-
@@ -108,17 +108,28 @@ generateRandomRow(Cs, Col, L):-
     Col1 is Col - 1,
     generateRandomRow(Cs, Col1, L1).
 
-showHHints(L, F, C, IncF, IncC):-
+showHints([], _, _, _, _).
+showHints([H|L], F, C, IncF, IncC):-
     gotoXY(F, C),
-    % TODO,
-    F1 is F + IncF,
-    showHHints(L, F1, C, IncF, IncC).
-
-showVHints(L, F, C, IncF, IncC):-
-    gotoXY(F, C),
-    % TODO,
+    showLine(H, IncF, IncC),
     C1 is C + IncC,
-    showVHints(L, F, C1, IncF, IncC).
+    showHints(L, F, C1, IncF, IncC).
+
+showLine([], _, _).
+showLine([[H, C, N] | L], IncF, IncC):-
+    color(C),
+    N > 1,
+    H == seguits,
+    write("<"),
+    write(N),
+    write(">"),
+    showNspaces(IncF),
+    showLine(L , IncF, IncC).
+showLine([[H, C, N] | L], IncF, IncC):-
+    color(C),
+    write(N),
+    showNspaces(IncF),
+    showLine(L, IncF, IncC).
 
 % Función para escribir por pantalla las filas de un nonograma
 % Parametros:
@@ -172,9 +183,9 @@ descriuNonograma(Nono, Desc):-
 %   - Columna inicial para pintar las pistas
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
-mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
+mostraPistesHoritzontals([DescHo, _], F, C, FInc, CInc):-
     cls,
-    showHHints(DescHo, F, C, FInc, CInc).
+    showHints(DescHo, F, C, FInc, CInc).
 
 % Función para pintar las pistas dada una descripción de verticales 
 % Parametros:
@@ -183,9 +194,9 @@ mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
 %   - Columna inicial para pintar las pistas
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
-mostraPistesVerticals(DescVer, F, C, FInc, CInc):-
+mostraPistesVerticals([_, DescVer], F, C, FInc, CInc):-
     cls,
-    showVHints(DescVer, F, C, FInc, CInc).
+    showHints(DescVer, F, C, FInc, CInc).
 
 % Función para resolver un nonograma dado su descripción
 % Parametros:
