@@ -82,7 +82,7 @@ seguits(N, X, [Y|L]) :-
     seguits(N, X, L).
 
 borrar(_, [], []).
-borrar(X, [X|L1], L2).
+borrar(X, [X|_], _).
 borrar(X, [Y|L1], [Y|L2]):-
     borrar(X, L1, L2).
 
@@ -175,7 +175,7 @@ showLine([[H, C, N] | L], IncF, IncC):-
     write(">"),
     showNspaces(IncF),
     showLine(L , IncF, IncC).
-showLine([[H, C, N] | L], IncF, IncC):-
+showLine([[_, C, N] | L], IncF, IncC):-
     color(C),
     write(N),
     showNspaces(IncF),
