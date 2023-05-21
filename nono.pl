@@ -49,7 +49,8 @@ treuPistes([X|L1], [Y|L2]):-
 extreuPista([], []).
 % Caso [seguits, color, 1]
 extreuPista([X|L1], [[seguits, X, 1]|L2]):-
-    vegades(X, [X|L1], 1),
+    vegades(X, [X|L1], N),
+    N = 1,
     !,
     extreuPista(L1, L2).
 % Caso [seguits, color, N]
@@ -57,34 +58,38 @@ extreuPista([X|L1], [[seguits, X, N]|L2]):-
     vegades(X, [X|L1], N),
     seguits(N, X, [X|L1]),
     !,
-    borrar(X, [X|L1], L3), % Borrar los seguidos
+    borrarTodo(X, [X|L1], L3), % Borrar los seguidos
     extreuPista(L3, L2).
 % Caso [no_seguits, color, N]
 extreuPista([X|L1], [[no_seguits, X, N]|L2]):-
     vegades(X, [X|L1], N),
     !,
-    borrar(X, [X|L1], L3), % Borrar los seguidos
-    extreuPista(L3, L1).
+    borrarTodo(X, [X|L1], L3), % Borrar los seguidos
+    extreuPista(L3, L2).
 
 vegades(_, [], 0).
 vegades(X, [X|L], N):-
     vegades(X, L, N1),
-    N is N1 + 1.
+    N is N1 + 1,
+    !.
 vegades(X, [_|L], N):-
-    vegades(X, L, N).
-     
+    vegades(X, L, N),
+    !.
+
 seguits(0, _, []).
 seguits(N, X, [X|L]) :-
     seguits(N1, X, L),
-    N is N1 + 1.
-seguits(N, X, [Y|L]) :-
-    X \= Y,
-    seguits(N, X, L).
+    N is N1 + 1,
+    !.
+seguits(0, _, _).
 
-borrar(_, [], []).
-borrar(X, [X|_], _).
-borrar(X, [Y|L1], [Y|L2]):-
-    borrar(X, L1, L2).
+borrarTodo(_,[],[]).
+borrarTodo(E,[E|L],R):-
+    borrarTodo(E,L,R),
+    !.
+borrarTodo(E,[X|L],[X|R]):-
+    borrarTodo(E,L,R),
+    !.
 
 % Función para mostrar una fila.
 % Parametros:
@@ -224,7 +229,8 @@ descriuNonograma(Nono, Desc):-
     % Hacer pista para las columnas
     treuPistes(NonoT, DescC),
     % Concatenar las pistas de las filas y las columnas
-    append(DescF, DescC, Desc).
+    append([DescF],[DescC], Desc),
+    !.
 
 % Función para pintar las pistas dada una descripción de hortizontales
 % Parametros:
@@ -233,7 +239,7 @@ descriuNonograma(Nono, Desc):-
 %   - Columna inicial para pintar las pistas
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
-mostraPistesHoritzontals([DescHo, _], F, C, FInc, CInc):-
+mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
     cls,
     showHints(DescHo, F, C, FInc, CInc).
 
@@ -244,7 +250,7 @@ mostraPistesHoritzontals([DescHo, _], F, C, FInc, CInc):-
 %   - Columna inicial para pintar las pistas
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
-mostraPistesVerticals([_, DescVer], F, C, FInc, CInc):-
+mostraPistesVerticals(DescVer, F, C, FInc, CInc):-
     cls,
     showHints(DescVer, F, C, FInc, CInc).
 
