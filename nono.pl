@@ -83,6 +83,7 @@ seguits(N, X, [X|L]) :-
     !.
 seguits(0, _, _).
 
+% Cambiar por sustituir
 borrarTodo(_,[],[]).
 borrarTodo(E,[E|L],R):-
     borrarTodo(E,L,R),
