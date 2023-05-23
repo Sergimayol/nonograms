@@ -265,29 +265,55 @@ descriuNonograma(Nono, Desc):-
 
 % Función para pintar las pistas dada una descripción de hortizontales
 % Parametros:
-%   - Descripción de las pistas
+%   - Descripción de las pistas hortizontales
 %   - Fila inicial para pintar las pistas
 %   - Columna inicial para pintar las pistas
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
 mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
-    %cls,
     showHints(DescHo, F, C, FInc, CInc).
 
 % Función para pintar las pistas dada una descripción de verticales 
 % Parametros:
-%   - Descripción de las pistas
+%   - Descripción de las pistas verticales
 %   - Fila inicial para pintar las pistas
 %   - Columna inicial para pintar las pistas
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
 mostraPistesVerticals(DescVer, F, C, FInc, CInc):-
-    %cls,
     showHints(DescVer, F, C, FInc, CInc).
 
 % Función para resolver un nonograma dado su descripción
 % Parametros:
 %   - Descripción del nonograma
 %   - Solución del nonograma
-resolNonograma(Desc, Sol):-
-    write("TODO").
+resolNonograma([PF,PC], Filas):-
+    resolFiles(PF, Filas),
+    transposeMatrix(Filas, Columnas),
+    verificaPistas(PC, Columnas).
+
+
+resolFiles([],[]).
+resolFiles([X|L],[Y|L2]):-
+    obtenerColores(X,C),
+    permutacio(C,C1),
+    pruebaPistas(X,C1),
+    resolFiles(L,L2).
+
+obtenerColores([],[]).
+obtenerColores([[_,C,_]|L],[[C]|R]):-
+    obtenerColores(L, R).
+
+verificaPistas().
+
+permutacio([], []).
+permutacio(L, [X|L1]) :-
+    borrar(X, L, L2),
+    permutacio(L2, L1).
+
+borrar(X,[X|L],L).
+borrar(X,[Y|L1],[Y|L2]):-
+    borrar(X,L1,L2).
+
+pruebaPistas().
+
