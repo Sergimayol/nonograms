@@ -8,7 +8,7 @@
 - [x] Tarea 4 - 2.5
 - [x] Tarea 5 - 2.0
 - [ ] Tarea 6 - 2.0
-- [ ] Documentar funciones auxiliares en código.
+- [x] Documentar funciones auxiliares en código.
 
 ## Anotaciones
 

@@ -72,6 +72,12 @@ extreuPista([X|L1], [[no_seguits, X, N]|L2]):-
     %borrarTodo(X, [X|L1], L3), % Borrar los seguidos
     extreuPista(L3, L2).
 
+% Función para obtener el numero de veces que aparece un 
+% elemento en una lista
+% Parametros:
+%   - Elemento a buscar
+%   - Lista donde buscar
+%   - Numero de veces que aparece
 vegades(_, [], 0).
 vegades(X, [X|L], N):-
     vegades(X, L, N1),
@@ -81,6 +87,12 @@ vegades(X, [_|L], N):-
     vegades(X, L, N),
     !.
 
+% Función para obtener el numero de veces que aparece un
+% elemento en una lista seguidos
+% Parametros:
+%   - Numero de veces que aparece
+%   - Elemento a buscar
+%   - Lista donde buscar
 seguits(0, _, []).
 seguits(N, X, [X|L]) :-
     seguits(N1, X, L),
@@ -97,6 +109,11 @@ borrarTodo(E,[X|L],[X|R]):-
     borrarTodo(E,L,R),
     !.
 
+% Función para sustituir un elemento por otro en una lista
+% Parametros:
+%   - Elemento a sustituir
+%   - Lista donde sustituir
+%   - Lista sustituida
 replaceAll(_,[],[]).
 replaceAll(E,[E|L],[fucsia|R]):-
     replaceAll(E,L,R),
