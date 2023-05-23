@@ -53,18 +53,23 @@ extreuPista([X|L1], [[seguits, X, 1]|L2]):-
     N = 1,
     !,
     extreuPista(L1, L2).
+% Caso fucsia
+extreuPista([fucsia|L1],L2):-
+    extreuPista(L1, L2).
 % Caso [seguits, color, N]
 extreuPista([X|L1], [[seguits, X, N]|L2]):-
     vegades(X, [X|L1], N),
     seguits(N, X, [X|L1]),
     !,
-    borrarTodo(X, [X|L1], L3), % Borrar los seguidos
+    replaceAll(X, [X|L1], L3), % Borrar los seguidos
+    %borrarTodo(X, [X|L1], L3), % Borrar los seguidos
     extreuPista(L3, L2).
 % Caso [no_seguits, color, N]
 extreuPista([X|L1], [[no_seguits, X, N]|L2]):-
     vegades(X, [X|L1], N),
     !,
-    borrarTodo(X, [X|L1], L3), % Borrar los seguidos
+    replaceAll(X, [X|L1], L3), % Borrar los seguidos
+    %borrarTodo(X, [X|L1], L3), % Borrar los seguidos
     extreuPista(L3, L2).
 
 vegades(_, [], 0).
@@ -90,6 +95,14 @@ borrarTodo(E,[E|L],R):-
     !.
 borrarTodo(E,[X|L],[X|R]):-
     borrarTodo(E,L,R),
+    !.
+
+replaceAll(_,[],[]).
+replaceAll(E,[E|L],[fucsia|R]):-
+    replaceAll(E,L,R),
+    !.
+replaceAll(E,[X|L],[X|R]):-
+    replaceAll(E,L,R),
     !.
 
 % Función para mostrar una fila.
@@ -241,7 +254,7 @@ descriuNonograma(Nono, Desc):-
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
 mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
-    cls,
+    %cls,
     showHints(DescHo, F, C, FInc, CInc).
 
 % Función para pintar las pistas dada una descripción de verticales 
@@ -252,7 +265,7 @@ mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
 mostraPistesVerticals(DescVer, F, C, FInc, CInc):-
-    cls,
+    %cls,
     showHints(DescVer, F, C, FInc, CInc).
 
 % Función para resolver un nonograma dado su descripción
