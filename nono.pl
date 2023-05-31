@@ -217,12 +217,127 @@ showLine([[_, C, N] | L], IncF, IncC):-
     showNspaces(IncF),
     showLine(L, IncF, IncC).
 
+% Función para resolver las filas de un nonograma
+% Parametros:
+%   - Descripción del nonograma
+%   - Filas del nonograma
+resolveRows([],[]).
+resolveRows([X|L1], [C1|L2]):-
+    obtainColors(X,C),
+    permutate(C,C1),
+    verifyHints(X,C1),
+    resolveRows(L1,L2).
+
+% Función para obtener los colores de una fila
+% Parametros:
+%   - Fila del nonograma
+%   - Colores de la fila
+obtainColors([],[]).
+obtainColors([[_,C,N]|L], L3):-
+    copyOf(N,C,X),
+    obtainColors(L,L2),
+    append(X,L2,L3).
+
+% Función para copiar un elemento N veces
+% Parametros:
+%   - Numero de veces a copiar
+%   - Elemento a copiar
+%   - Lista copiada
+copyOf(1,X,[X]):-!.
+copyOf(N,X,[X|L]):-
+    N1 is N-1,
+    copyOf(N1,X,L).
+
+% Función para permutar una lista
+% Parametros:
+%   - Lista a permutar
+%   - Lista permutada
+permutate([],[]).
+permutate([X|Y],Z):-
+    permutate(Y,L),
+    add(X,L,Z).
+
+% Función para añadir un elemento a una lista
+% Parametros:
+%   - Elemento a añadir
+%   - Lista a la que se añade
+%   - Lista con el elemento añadido
+add(E,L,[E|L]).
+add(E,[X|Y],[X|Z]):-
+    add(E,Y,Z).
+
+% Función para verificar las pistas de una fila
+% Parametros:
+%   - Pistas de la fila
+%   - Colores de la fila
+verifyHints([],_).
+verifyHints([[seguits,C,1]|L],L2):-
+    flatten(L2,L3),
+    member(C,L3),
+    !,
+    verifyHints(L,L2).
+verifyHints([[seguits,C,N]|L],L2):-
+    auxF(C,N,L2),
+    !,
+    verifyHints(L,L2).
+verifyHints([[no_seguits,C,_]|L],L2):-
+    vegades(C,L2,N2),
+    not(auxF(C,N2,L2)),
+    !,
+    verifyHints(L,L2).
+
+% Función para verificar todas las pistas de un nonograma
+% Parametros:
+%   - Pistas del nonograma
+%   - Colores del nonograma
+verifyAllHints([],_).
+verifyAllHints([X|L], [Y|L2]):-
+    verifyHints(X,Y),
+    verifyAllHints(L,L2).
+
+% Función para aplanar una lista
+% Parametros:
+%   - Lista a aplanar
+%   - Lista aplanada
+flatten([],[]).
+flatten([X|L1],L2):-
+    is_list(X),
+    flatten(X,L3),
+    flatten(L1,L4),
+    append(L3,L4,L2).
+flatten([X|L1],[X|L2]):-
+    flatten(L1,L2).
+
+% Función auxiliar para verificar las pistas de una fila
+% Parametros:
+%   - Color a verificar
+%   - Número de veces que se tiene que repetir
+%   - Colores de la fila
+auxF(_,_,[]):-fail.
+auxF(X,N,[X|L1]):-
+    verifyAuxF(X,N,[X|L1]),
+    !.
+auxF(X,N,[_|L1]):-
+    auxF(X,N,L1).
+
+% Función auxiliar para verificar las pistas de una fila
+% Parametros:
+%   - Color a verificar
+%   - Número de veces que se tiene que repetir
+%   - Colores de la fila
+verifyAuxF(X,1,[X|_]).
+verifyAuxF(X,N,[X|L1]):-
+    N1 is N-1,
+    verifyAuxF(X,N1,L1).
+
+% ------ PREDICADO 1 ------
 % Función para escribir por pantalla las filas de un nonograma
 % Parametros:
 %   - Lista de filas del nonograma (lista de listas)
 escriuNonograma(Nono):-
     showList(Nono). 
 
+% ------ PREDICADO 2 ------
 % Función para pintar, graficament, en la pantalla un nonograma.
 % Parametros:
 %   - Lista de filas del nonograma (lista de listas)
@@ -232,8 +347,11 @@ escriuNonograma(Nono):-
 %   - Separación entre columnas
 mostraNonograma([X|L], Fil, Col, IncF, IncC):-
     cls,
-    showNonogram([X|L], Fil, Col, IncF, IncC).
+    showNonogram([X|L], Fil, Col, IncF, IncC),
+    color(negre),
+    !.
 
+% ------ PREDICADO 3 ------
 % Función para construir un nonograma aleatorio a partir de una lista de colores, 
 % un número de filas y un número de columnas.
 % Parametros:
@@ -246,8 +364,10 @@ ferNonograma(Colors, Fil, Col, Nono):-
     generateRandomRow(Colors, Col, Row),
     append([Row], Nono1, Nono),
     Fil1 is Fil - 1,
-    ferNonograma(Colors, Fil1, Col, Nono1).
+    ferNonograma(Colors, Fil1, Col, Nono1),
+    !.
 
+% ------ PREDICADO 4 ------
 % Función para extrar las pistas dado un nonograma
 % Parametros:
 %   - Lista de filas del nonograma (lista de listas)
@@ -263,6 +383,7 @@ descriuNonograma(Nono, Desc):-
     append([DescF],[DescC], Desc),
     !.
 
+% ------ PREDICADO 5.1 ------
 % Función para pintar las pistas dada una descripción de hortizontales
 % Parametros:
 %   - Descripción de las pistas hortizontales
@@ -271,8 +392,10 @@ descriuNonograma(Nono, Desc):-
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
 mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
-    showHints(DescHo, F, C, FInc, CInc).
+    showHints(DescHo, F, C, FInc, CInc),
+    !.
 
+% ------ PREDICADO 5.2 ------
 % Función para pintar las pistas dada una descripción de verticales 
 % Parametros:
 %   - Descripción de las pistas verticales
@@ -281,39 +404,16 @@ mostraPistesHoritzontals(DescHo, F, C, FInc, CInc):-
 %   - Incremento de fila para pintar las pistas
 %   - Incremento de columna para pintar las pistas
 mostraPistesVerticals(DescVer, F, C, FInc, CInc):-
-    showHints(DescVer, F, C, FInc, CInc).
+    showHints(DescVer, F, C, FInc, CInc),
+    !.
 
+% ------ PREDICADO 6 ------
 % Función para resolver un nonograma dado su descripción
 % Parametros:
 %   - Descripción del nonograma
 %   - Solución del nonograma
-resolNonograma([PF,PC], Filas):-
-    resolFiles(PF, Filas),
-    transposeMatrix(Filas, Columnas),
-    verificaPistas(PC, Columnas).
-
-
-resolFiles([],[]).
-resolFiles([X|L],[Y|L2]):-
-    obtenerColores(X,C),
-    permutacio(C,C1),
-    pruebaPistas(X,C1),
-    resolFiles(L,L2).
-
-obtenerColores([],[]).
-obtenerColores([[_,C,_]|L],[[C]|R]):-
-    obtenerColores(L, R).
-
-verificaPistas().
-
-permutacio([], []).
-permutacio(L, [X|L1]) :-
-    borrar(X, L, L2),
-    permutacio(L2, L1).
-
-borrar(X,[X|L],L).
-borrar(X,[Y|L1],[Y|L2]):-
-    borrar(X,L1,L2).
-
-pruebaPistas().
-
+resolNonograma([PF,PC], Nono):-
+    resolveRows(PF,Nono),
+    transposeMatrix(Nono,NonoT),
+    verifyAllHints(PC,NonoT),
+    !.
