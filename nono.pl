@@ -286,9 +286,6 @@ showHint([no_seguits, C, N], Col, Row) :-
 
 % ------ PREDICADO 6 ------
 % Función para resolver un nonograma dado su descripción
-% Parametros:
-%   - Descripción del nonograma
-%   - Solución del nonograma
 resolNonograma([PF,PC], Nono):-
     resolveRows(PF,Nono),
     transposeMatrix(Nono,NonoT),
